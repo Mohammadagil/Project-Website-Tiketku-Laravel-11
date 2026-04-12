@@ -66,6 +66,7 @@ class TicketForm
                             ->required(),
 
                         Select::make('category_id')
+                            ->label('Category')
                             ->relationship('category', 'name')
                             ->searchable()
                             ->preload()
@@ -81,6 +82,14 @@ class TicketForm
                             ->required(),
 
                         TimePicker::make('closed_time_at')
+                            ->required(),
+
+                        TextInput::make('rating')
+                            ->label('Rating 1-5')
+                            ->numeric()
+                            ->minValue(1)
+                            ->maxValue(5)
+                            ->step(0.1)
                             ->required(),
 
                     ])

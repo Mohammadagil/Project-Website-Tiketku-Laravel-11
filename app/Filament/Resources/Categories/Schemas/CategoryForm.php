@@ -21,6 +21,12 @@ class CategoryForm
                     ->directory('categories') // ← wajib
                     ->visibility('public')
                     ->required(),
+                FileUpload::make('icon_white')
+                    ->image()
+                    ->disk('public')        // ← wajib
+                    ->directory('categories') // ← wajib
+                    ->visibility('public')
+                    ->required(),
             ]);
     }
 }

@@ -23,6 +23,8 @@ class CategoriesTable
                     ->searchable(),
                 ImageColumn::make('icon')
                     ->disk('public'),
+                ImageColumn::make('icon_white')
+                    ->disk('public'),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

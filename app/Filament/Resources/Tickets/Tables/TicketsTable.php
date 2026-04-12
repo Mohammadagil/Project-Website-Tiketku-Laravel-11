@@ -33,7 +33,7 @@ class TicketsTable
                     ->falseColor('danger')
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle')
-                    ->label('Popular', )
+                    ->label('Popular'),
             ])
             ->filters([
                 SelectFilter::make('category_id')
