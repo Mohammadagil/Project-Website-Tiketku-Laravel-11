@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BookingTransactions\Tables;
 
+use App\Jobs\SendBookingApprovedEmail;
 use App\Models\BookingTransaction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -54,6 +55,8 @@ class BookingTransactionsTable
                     ->action(function (BookingTransaction $record) {
                         $record->is_paid = true;
                         $record->save();
+
+                        SendBookingApprovedEmail::dispatch($record);
 
                         Notification::make()
                             ->title('Ticket Approved')

@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Services;
+
+use App\Jobs\SendBookingConfirmedEmail;
 use App\Repositories\Contracts\BookingRepositoryInterface;
 use App\Repositories\Contracts\TicketRepositoryInterface;
 use App\Models\BookingTransaction;
@@ -89,6 +91,9 @@ class BookingService
             $newBooking = $this->bookingRepository->createBooking($validated);
 
             $bookingTransactionId = $newBooking->id;
+
+            //kirim email konfirmasi ke user
+            SendBookingConfirmedEmail::dispatch($newBooking);
         });
         return $bookingTransactionId;
     }
