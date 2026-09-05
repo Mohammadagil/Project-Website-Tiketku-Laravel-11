@@ -22,7 +22,6 @@ return new class extends Migration
             $table->unsignedBigInteger('price');
             $table->boolean('is_popular');
             $table->text('about');
-            $table->float('rating');
             $table->time('open_time_at');
             $table->time('closed_time_at');
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
