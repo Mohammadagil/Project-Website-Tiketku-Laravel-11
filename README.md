@@ -1,66 +1,114 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="300" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Tiketku
 
-## About Laravel
+Tiketku adalah aplikasi pemesanan tiket (booking) berbasis Laravel. Pengunjung dapat menjelajahi tiket berdasarkan kota penjual/kategori, melihat detail tiket, melakukan booking, membayar, hingga mengecek status booking. Admin mengelola data (kategori, seller, tiket, transaksi) melalui panel admin berbasis [Filament](https://filamentphp.com).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Halaman depan (Front)**: listing tiket, explore berdasarkan kota seller, browse berdasarkan kategori, dan detail tiket.
+- **Booking**: form booking tiket, pembayaran, halaman selesai booking, serta cek status booking berdasarkan invoice.
+- **Notifikasi email otomatis** (via queue job):
+  - `SendBookingConfirmedEmail` → email `OrderConfirmed` saat booking baru dibuat.
+  - `SendBookingApprovedEmail` → email `OrderApproved` saat booking disetujui/lunas.
+- **Panel admin (Filament)** di `/admin` untuk mengelola kategori, seller, tiket, foto tiket, dan transaksi booking.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tech Stack
 
-## Learning Laravel
+- PHP 8.2+, Laravel 11
+- Filament 5 (admin panel)
+- MySQL (lihat konfigurasi `.env`)
+- Vite + Tailwind CSS (asset frontend)
+- Queue: database driver (untuk proses pengiriman email booking)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Alur Instalasi (Setup dari Awal)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. **Clone project & install dependency**
+   ```bash
+   git clone <url-repo> tiketku
+   cd tiketku
+   composer install
+   npm install
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Siapkan file environment**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   Lalu sesuaikan koneksi database di `.env` (default menggunakan MySQL):
+   ```env
+   DB_CONNECTION=mysql
+   DB_DATABASE=tiketku
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+   Pastikan database `tiketku` sudah dibuat di MySQL sebelum lanjut ke langkah berikutnya.
 
-## Laravel Sponsors
+3. **Jalankan migrasi & seeder**
+   ```bash
+   php artisan migrate --seed
+   ```
+   Seeder akan membuat:
+   - Data awal (`DatabaseSeeder`)
+   - Akun admin (`AdminUserSeeder`) untuk login ke panel Filament di `/admin`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+4. **Buat storage link** (untuk menampilkan gambar/foto tiket yang diupload)
+   ```bash
+   php artisan storage:link
+   ```
 
-### Premium Partners
+5. **Build asset frontend**
+   ```bash
+   npm run dev      # mode development (watch)
+   # atau
+   npm run build    # build untuk production
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Menjalankan Project (Sehari-hari)
 
-## Contributing
+Karena project ini menggunakan **Laravel Herd**, server web sudah otomatis berjalan — tidak perlu `php artisan serve`. Cukup pastikan:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Herd aktif** di sistem, dan project sudah terdaftar sehingga bisa diakses lewat domain `.test` (lihat `APP_URL` di `.env`, contoh: `http://tiketku.test`).
+2. **Jalankan queue worker**, karena pengiriman email booking diproses lewat queue (`QUEUE_CONNECTION=database`):
+   ```bash
+   php artisan queue:work
+   ```
+   Tanpa worker ini aktif, email konfirmasi/approval booking tidak akan terkirim.
+3. **Jalankan Vite dev server** jika sedang mengembangkan tampilan:
+   ```bash
+   npm run dev
+   ```
+4. Akses aplikasi di browser:
+   - Halaman utama: `http://tiketku.test`
+   - Panel admin: `http://tiketku.test/admin`
 
-## Code of Conduct
+> Jika tidak menggunakan Herd (misalnya di environment lain), jalankan server bawaan Laravel sebagai gantinya: `php artisan serve`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Alur Penggunaan Aplikasi
 
-## Security Vulnerabilities
+1. Pengunjung membuka halaman utama, bisa explore tiket per kota seller (`/explore/{kota}`) atau per kategori (`/browse/{kategori}`).
+2. Pengunjung membuka detail tiket (`/details/{ticket}`) lalu melakukan booking (`/booking/{ticket}`).
+3. Setelah booking dibuat, sistem mengirim email konfirmasi (job `SendBookingConfirmedEmail`) dan mengarahkan ke halaman pembayaran (`/booking/payment`).
+4. Setelah pembayaran diproses, pengunjung diarahkan ke halaman selesai booking (`/booking/finished/{bookingTransaction}`).
+5. Pengunjung dapat mengecek status booking kapan saja lewat `/check-booking` menggunakan nomor invoice.
+6. Admin login ke `/admin` untuk memverifikasi/menyetujui transaksi booking, yang akan memicu email approval (job `SendBookingApprovedEmail`).
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Menjalankan Test
+
+```bash
+php artisan test
+```
+
+## Struktur Kode Penting
+
+- `app/Http/Controllers/FrontController.php` — logika halaman depan (listing, explore, category, detail).
+- `app/Http/Controllers/BookingController.php` — logika booking, pembayaran, cek status.
+- `app/Models/` — `Ticket`, `Seller`, `Category`, `TicketPhoto`, `BookingTransaction`, `User`.
+- `app/Jobs/` & `app/Mail/` — proses queue dan template email booking.
+- `app/Filament/` & `app/Providers/Filament/AdminPanelProvider.php` — konfigurasi panel admin.
+- `routes/web.php` — daftar route aplikasi.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Project ini dibangun di atas framework [Laravel](https://laravel.com) yang open-source dan berlisensi [MIT](https://opensource.org/licenses/MIT).
